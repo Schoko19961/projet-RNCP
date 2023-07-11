@@ -10,9 +10,10 @@ def get_http_client()->PoolManager:
     """
     Returns the HTTP client. Adds proxy configuration if needed.
     """
-    if "HTTP_PROXY" in os.environ  :
+    if "http_proxy" in os.environ:
+        print("Using proxy", os.environ["http_proxy"])
         http = urllib3.ProxyManager(
-            os.environ["HTTP_PROXY"],
+            os.environ["http_proxy"],
         )
     else:
         http = urllib3.PoolManager()
@@ -30,12 +31,13 @@ def get_data(table, queryparams):
 
     url = f"{BASE_URL}/{table}?{query_params_encoded}"
     try:
-        response = http.request("GET",url=url,retries=urllib3.Retry(total=30,backoff_factor=0.2 , backoff_max=3))
+        response = http.request("GET",url=url,retries=urllib3.Retry(total=30,backoff_factor=0.2))
         result_json = json.loads(response.data)
         result_processed = [entry["properties"] for entry in result_json["features"]]
         return pd.DataFrame(result_processed)
     except Exception as e:
         print("Error while fetching data from API", table, query_params)
+        print(e)
         with open("error.json", "a") as f:
             json.dump(queryparams, f, indent=2)
         return pd.DataFrame()
