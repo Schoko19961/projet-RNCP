@@ -11,7 +11,6 @@ def get_http_client()->PoolManager:
     Returns the HTTP client. Adds proxy configuration if needed.
     """
     if "http_proxy" in os.environ:
-        print("Using proxy", os.environ["http_proxy"])
         http = urllib3.ProxyManager(
             os.environ["http_proxy"],
         )
