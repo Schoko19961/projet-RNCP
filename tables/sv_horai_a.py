@@ -1,7 +1,7 @@
 import dateutil
 from api.api import get_data
 from api.request_storage import RequestStorage
-from tables.sv_arret_p import load_sv_arret_p
+#from tables.sv_arret_p import load_sv_arret_p
 from tqdm import tqdm
 import pandas as pd
 from datetime import datetime, timedelta

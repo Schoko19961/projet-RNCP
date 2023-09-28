@@ -1,9 +1,8 @@
 from api.api import get_data
-from datetime import datetime
 
-TABLE_NAME = "sv_arret_p"
+TABLE_NAME = "sv_chem_l"
 
-def load_sv_arret_p(start_date = None):
+def load_sv_chem_l(start_date = None):
     query_params = { }
     
     if start_date is not None:

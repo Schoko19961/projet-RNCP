@@ -18,6 +18,13 @@ def get_http_client()->PoolManager:
         http = urllib3.PoolManager()
     return http
 
+def create_response_object(response_item):
+    res = response_item["properties"]
+    if "geometry" in response_item and response_item["geometry"] is not None and "coordinates" in response_item["geometry"]:
+        coordinates = {"coordinates": response_item["geometry"]["coordinates"]}
+        res.update(coordinates)
+    return res
+
 ## Create a function which sends an HTTP request to the API based on the table name and query params
 def get_data(table, queryparams):
     http = get_http_client()
@@ -32,7 +39,7 @@ def get_data(table, queryparams):
     try:
         response = http.request("GET",url=url,retries=urllib3.Retry(total=30,backoff_factor=0.2))
         result_json = json.loads(response.data)
-        result_processed = [entry["properties"] for entry in result_json["features"]]
+        result_processed = [create_response_object(item) for item in result_json["features"]]
         return pd.DataFrame(result_processed)
     except Exception as e:
         print("Error while fetching data from API", table, query_params)
